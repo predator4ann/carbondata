@@ -43,7 +43,7 @@ private[sql] case class CarbonDescribeFormattedCommand(
   extends MetadataCommand {
 
   override def processMetadata(sparkSession: SparkSession): Seq[Row] = {
-    val relation = CarbonEnv.getInstance(sparkSession).carbonMetastore
+    val relation = CarbonEnv.getInstance(sparkSession).carbonMetaStore
       .lookupRelation(tblIdentifier)(sparkSession).asInstanceOf[CarbonRelation]
     setAuditTable(relation.databaseName, relation.tableName)
     val mapper = new ObjectMapper()
