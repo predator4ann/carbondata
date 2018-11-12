@@ -426,14 +426,13 @@ public final class CarbonProperties {
 
   private void validateEnableVectorReader() {
     String vectorReaderStr =
-        carbonProperties.getProperty(ENABLE_VECTOR_READER.getKey());
+        carbonProperties.getProperty(ENABLE_VECTOR_READER);
     boolean isValidBooleanValue = CarbonUtil.validateBoolean(vectorReaderStr);
     if (!isValidBooleanValue) {
       LOGGER.warn("The enable vector reader value \"" + vectorReaderStr
           + "\" is invalid. Using the default value \""
           + CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString());
-      carbonProperties.setProperty(ENABLE_VECTOR_READER.getKey(),
-          CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString());
+      carbonProperties.setProperty(ENABLE_VECTOR_READER);
     }
   }
 

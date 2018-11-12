@@ -21,8 +21,10 @@ import java.util.Properties;
 
 public class ExtendedProperties extends Properties {
   public String getProperty(Property property) {
-    Object oval = super.get(property.getKey());
-    String sval = (oval instanceof String) ? (String) oval : null;
-    return ((sval == null) && (defaults != null)) ? defaults.getProperty(property.getKey()) : sval;
+    return getProperty(property.getKey());
+  }
+
+  public Object setProperty(Property property) {
+    return setProperty(property.getKey(), property.getDefaultValueString());
   }
 }
