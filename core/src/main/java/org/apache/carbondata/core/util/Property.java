@@ -52,15 +52,11 @@ public class Property<T> {
     return String.valueOf(defaultValue);
   }
 
-  public String getDoc() {
-    return doc;
-  }
-
-  public boolean isDynamicConfigurable() {
-    return dynamicConfigurable;
-  }
-
   public static PropertyBuilder<String> buildStringProperty() {
     return new PropertyBuilder<String>();
+  }
+
+  public static PropertyBuilder<Boolean> buildBooleanProperty() {
+    return new PropertyBuilder<Boolean>();
   }
 }

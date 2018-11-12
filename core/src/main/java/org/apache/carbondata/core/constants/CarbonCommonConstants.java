@@ -1238,9 +1238,9 @@ public final class CarbonCommonConstants {
    */
   public static final String MIN_MAX_DEFAULT_VALUE = "true";
 
-  public static final Property ENABLE_VECTOR_READER = Property.buildStringProperty()
+  public static final Property ENABLE_VECTOR_READER = Property.buildBooleanProperty()
       .key("carbon.enable.vector.reader")
-      .defaultValue("true")
+      .defaultValue(true)
       .doc("enable vector read")
       .dynamicConfigurable(true)
       .build();
