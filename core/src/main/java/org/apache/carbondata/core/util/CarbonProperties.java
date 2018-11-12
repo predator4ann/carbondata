@@ -25,7 +25,6 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -88,7 +87,7 @@ public final class CarbonProperties {
   /**
    * porpeties .
    */
-  private Properties carbonProperties;
+  private ExtendedProperties carbonProperties;
 
   private Set<String> propertySet = new HashSet<String>();
 
@@ -102,7 +101,7 @@ public final class CarbonProperties {
    * carbon properties in memory.
    */
   private CarbonProperties() {
-    carbonProperties = new Properties();
+    carbonProperties = new ExtendedProperties();
     loadProperties();
     validateAndLoadDefaultProperties();
   }
@@ -153,7 +152,7 @@ public final class CarbonProperties {
       case CARBON_CUSTOM_BLOCK_DISTRIBUTION:
         validateCustomBlockDistribution();
         break;
-      case ENABLE_VECTOR_READER:
+      case "carbon.enable.vector.reader": // TODO: optimize
         validateEnableVectorReader();
         break;
       case CSV_READ_BUFFER_SIZE:
@@ -427,14 +426,14 @@ public final class CarbonProperties {
 
   private void validateEnableVectorReader() {
     String vectorReaderStr =
-        carbonProperties.getProperty(ENABLE_VECTOR_READER);
+        carbonProperties.getProperty(ENABLE_VECTOR_READER.getKey());
     boolean isValidBooleanValue = CarbonUtil.validateBoolean(vectorReaderStr);
     if (!isValidBooleanValue) {
       LOGGER.warn("The enable vector reader value \"" + vectorReaderStr
           + "\" is invalid. Using the default value \""
-          + CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT);
-      carbonProperties.setProperty(ENABLE_VECTOR_READER,
-          CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT);
+          + CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString());
+      carbonProperties.setProperty(ENABLE_VECTOR_READER.getKey(),
+          CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString());
     }
   }
 
@@ -774,6 +773,16 @@ public final class CarbonProperties {
     return carbonProperties.getProperty(key);
   }
 
+  public String getProperty(Property property) {
+    // get the property value from session parameters,
+    // if its null then get value from carbonProperties
+    String sessionPropertyValue = getSessionPropertyValue(property.getKey());
+    if (null != sessionPropertyValue) {
+      return sessionPropertyValue;
+    }
+    return carbonProperties.getProperty(property.getKey());
+  }
+
   /**
    * returns session property value
    *
@@ -809,6 +818,14 @@ public final class CarbonProperties {
     return value;
   }
 
+  public String getProperty(Property property, String defaultValue) {
+    String value = getProperty(property.getKey());
+    if (null == value) {
+      return defaultValue;
+    }
+    return value;
+  }
+
   /**
    * This method will be used to add a new property
    *
@@ -822,6 +839,16 @@ public final class CarbonProperties {
     // the method will validate the added property
     // if the added property is not valid then will reset to default value.
     validateAndLoadDefaultProperties(key.toLowerCase());
+    return this;
+  }
+
+  public CarbonProperties addProperty(Property property, String value) {
+    carbonProperties.setProperty(property.getKey(), value);
+    addedProperty.put(property.getKey(), value);
+    // the method will validate the added property
+    // if the added property is not valid then will reset to default value.
+    validateAndLoadDefaultProperties(property.getKey().toLowerCase());
+    property.setValue(value);
     return this;
   }
 
@@ -1051,7 +1078,8 @@ public final class CarbonProperties {
 
   public boolean isEnableVectorReader() {
     return getInstance().getProperty(CarbonCommonConstants.ENABLE_VECTOR_READER,
-        CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT).equalsIgnoreCase("true");
+        CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString())
+        .equalsIgnoreCase("true");
   }
 
   /**

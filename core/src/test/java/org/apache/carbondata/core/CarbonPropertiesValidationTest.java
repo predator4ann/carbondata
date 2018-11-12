@@ -26,6 +26,8 @@ import org.apache.carbondata.core.util.CarbonProperties;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import static org.apache.carbondata.core.constants.CarbonCommonConstants.ENABLE_VECTOR_READER;
+
 /**
  * Method to test the carbon common constant configurations.
  */
@@ -118,7 +120,7 @@ public class CarbonPropertiesValidationTest extends TestCase {
         carbonProperties.getProperty(CarbonCommonConstants.ENABLE_VECTOR_READER);
     assertTrue(valueBeforeValidation.equals(valueAfterValidation));
     assertTrue(
-        CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT.equalsIgnoreCase(valueAfterValidation));
+        CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString().equalsIgnoreCase(valueAfterValidation));
   }
 
   @Test public void testValidateCarbonCSVReadBufferSizeByte()
@@ -269,6 +271,11 @@ public class CarbonPropertiesValidationTest extends TestCase {
     valueAfterValidation = carbonProperties
         .getProperty(CarbonCommonConstants.CARBON_SCHEDULER_MIN_REGISTERED_RESOURCES_RATIO);
     assertTrue(valueAfterValidation.equals("0.1"));
+  }
+
+  public void testPropertyBuilder() {
+    carbonProperties.addProperty(ENABLE_VECTOR_READER, "false");
+    assertEquals(carbonProperties.getProperty(ENABLE_VECTOR_READER, "true"), "false");
   }
 
 }

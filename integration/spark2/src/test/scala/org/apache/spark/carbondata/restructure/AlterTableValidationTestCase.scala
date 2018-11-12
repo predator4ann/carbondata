@@ -736,7 +736,7 @@ test("test alter command for boolean data type with correct default measure valu
     finally {
       CarbonProperties.getInstance()
         .addProperty(CarbonCommonConstants.ENABLE_VECTOR_READER,
-          CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT)
+          CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString)
     }
   }
 

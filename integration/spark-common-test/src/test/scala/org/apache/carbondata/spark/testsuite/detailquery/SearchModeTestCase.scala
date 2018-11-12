@@ -63,7 +63,7 @@ class SearchModeTestCase extends QueryTest with BeforeAndAfterAll {
     CarbonProperties.getInstance().addProperty(CarbonCommonConstants.ENABLE_VECTOR_READER, "false")
     checkSearchAnswer("select * from main where city = 'city3'")
     CarbonProperties.getInstance().addProperty(CarbonCommonConstants.ENABLE_VECTOR_READER,
-      CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT)
+      CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString)
   }
 
   test("SearchMode Query: vector result") {

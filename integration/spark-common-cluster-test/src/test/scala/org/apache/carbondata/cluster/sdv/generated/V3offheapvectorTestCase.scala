@@ -322,7 +322,7 @@ class V3offheapvectorTestCase extends QueryTest with BeforeAndAfterAll {
   val prop = CarbonProperties.getInstance()
   val p1 = prop.getProperty("carbon.blockletgroup.size.in.mb", CarbonV3DataFormatConstants.BLOCKLET_SIZE_IN_MB_DEFAULT_VALUE)
   val p2 = prop.getProperty("enable.offheap.sort", CarbonCommonConstants.ENABLE_OFFHEAP_SORT_DEFAULT)
-  val p3 = prop.getProperty("carbon.enable.vector.reader", CarbonCommonConstants.ENABLE_VECTOR_READER_DEFAULT)
+  val p3 = prop.getProperty("carbon.enable.vector.reader", CarbonCommonConstants.ENABLE_VECTOR_READER.getDefaultValueString())
   val p4 = prop.getProperty("carbon.data.file.version", CarbonCommonConstants.CARBON_DATA_FILE_DEFAULT_VERSION)
   val p5 = prop.getProperty("carbon.enable.auto.load.merge", CarbonCommonConstants.DEFAULT_ENABLE_AUTO_LOAD_MERGE)
   val p6 = prop.getProperty("carbon.compaction.level.threshold", CarbonCommonConstants.DEFAULT_SEGMENT_LEVEL_THRESHOLD)

@@ -20,6 +20,7 @@ package org.apache.carbondata.core.constants;
 import java.nio.charset.Charset;
 
 import org.apache.carbondata.common.annotations.InterfaceStability;
+import org.apache.carbondata.core.util.Property;
 import org.apache.carbondata.core.util.annotations.CarbonProperty;
 
 public final class CarbonCommonConstants {
@@ -1237,10 +1238,12 @@ public final class CarbonCommonConstants {
    */
   public static final String MIN_MAX_DEFAULT_VALUE = "true";
 
-  @CarbonProperty(dynamicConfigurable = true)
-  public static final String ENABLE_VECTOR_READER = "carbon.enable.vector.reader";
-
-  public static final String ENABLE_VECTOR_READER_DEFAULT = "true";
+  public static final Property ENABLE_VECTOR_READER = Property.buildStringProperty()
+      .key("carbon.enable.vector.reader")
+      .defaultValue("true")
+      .doc("enable vector read")
+      .dynamicConfigurable(true)
+      .build();
 
   /**
    * property to set is IS_DRIVER_INSTANCE
