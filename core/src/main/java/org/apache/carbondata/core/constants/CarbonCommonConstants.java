@@ -1241,7 +1241,10 @@ public final class CarbonCommonConstants {
   public static final Property ENABLE_VECTOR_READER = Property.buildBooleanProperty()
       .key("carbon.enable.vector.reader")
       .defaultValue(true)
-      .doc("enable vector read")
+      .doc("Spark added vector processing to optimize cpu cache miss and there by " +
+          "increase the query performance. This configuration enables to fetch data " +
+          "as columnar batch of size 4*1024 rows instead of fetching data row by row " +
+          "and provide it to spark so that there is improvement in  select queries performance. ")
       .dynamicConfigurable(true)
       .build();
 
