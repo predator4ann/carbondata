@@ -241,6 +241,33 @@ release the memory and destroy JVM.
     jobject readSchema(char *path, bool validateSchema);
 ```
 
+```
+    /**
+     * This method return the version details in formatted string by reading from carbondata file
+     * default won't validate the version details between different carbondata files.
+     *
+     * @param path carbondata file path or folder path
+     * @return string with information of who has written this file
+     * in which carbondata project version
+     * @throws IOException
+     */
+    char *getVersionDetails(char *path);
+```
+
+```
+    /**
+     * This method return the version details in formatted string by reading from carbondata file
+     * If validate is true, it will check the version details between different carbondata files.
+     * And if version details are not the same, it will throw exception
+     *
+     * @param path     carbondata file path or folder path
+     * @param validate whether validate the version details between different carbondata files.
+     * @return string with information of who has written this file
+     * in which carbondata project version
+     */
+    char *getVersionDetails(char *path, bool validate);
+```
+
 ###Schema
 ``` 
  /**

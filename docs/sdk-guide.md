@@ -771,11 +771,26 @@ Find example code at [CarbonReaderExample](https://github.com/apache/carbondata/
    * This method return the version details in formatted string by reading from carbondata file
    * If application name is SDK_1.0.0 and this has written the carbondata file in carbondata 1.6 project version,
    * then this API returns the String "SDK_1.0.0 in version: 1.6.0-SNAPSHOT"
-   * @param dataFilePath complete path including carbondata file name
+   * Default value of validate is false, it won't validate the version details between different carbondata files.
+   *
+   * @param dataFilePath path carbondata file path or folder path
    * @return string with information of who has written this file in which carbondata project version
    * @throws IOException
    */
   public static String getVersionDetails(String dataFilePath);
+```
+ 
+``` 
+    /**
+     * This method return the version details in formatted string by reading from carbondata file
+     * If validate is true, it will check the version details between different carbondata files.
+     * And if version details are not the same, it will throw exception
+     *
+     * @param path carbondata file path or folder path
+     * @return string with information of who has written this file in which carbondata project version
+     * @throws IOException
+     */
+    public static String getVersionDetails(String path, boolean validate);
 ```
 
 ### Class org.apache.carbondata.sdk.file.Schema

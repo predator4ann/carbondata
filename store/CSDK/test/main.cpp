@@ -227,6 +227,29 @@ bool tryCarbonRowException(JNIEnv *env, char *path) {
     printResultWithException(env, carbonReaderClass);
 }
 
+/*
+ * test get Version Details from path
+ *
+ * @param env jni env
+ * @return whether it is success
+ */
+bool getVersionDetails(JNIEnv *env, char *Path, bool validate) {
+    printf("\nget version details from path:\n");
+    try {
+        CarbonSchemaReader carbonSchemaReader(env);
+        char *version;
+        if (validate) {
+            version = carbonSchemaReader.getVersionDetails(Path, validate);
+        } else {
+            version = carbonSchemaReader.getVersionDetails(Path);
+        }
+        printf("\n%s\t\n", version);
+    } catch (jthrowable e) {
+        env->ExceptionDescribe();
+    }
+    return true;
+}
+
 /**
  * test read data from local disk, without projection
  *
@@ -694,15 +717,17 @@ int main(int argc, char *argv[]) {
         testReadNextBatchRow(env, S3Path, 100000, 100000, argv, 4, false);
         testReadNextBatchRow(env, S3Path, 100000, 100000, argv, 4, true);
     } else {
+        char *writePath = "./data";
         tryCatchException(env);
         tryCarbonRowException(env, smallFilePath);
         testCarbonProperties(env);
-        testWriteData(env, "./data", 1, argv);
-        testWriteData(env, "./data", 1, argv);
+        testWriteData(env, writePath, 1, argv);
         readFromLocalWithoutProjection(env, smallFilePath);
         readFromLocalWithProjection(env, smallFilePath);
         readSchema(env, path, false);
         readSchema(env, path, true);
+        getVersionDetails(env, writePath, true);
+        getVersionDetails(env, writePath, false);
 
         int batch = 32000;
         int printNum = 32000;

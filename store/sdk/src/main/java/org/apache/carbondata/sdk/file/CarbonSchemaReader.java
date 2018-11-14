@@ -241,12 +241,52 @@ public class CarbonSchemaReader {
 
   /**
    * This method return the version details in formatted string by reading from carbondata file
+   * If validate is true, it will check the version details between different carbondata files.
+   * And if version details are not the same, it will throw exception
    *
-   * @param dataFilePath
-   * @return
+   * @param path     carbondata file path or folder path
+   * @param validate whether validate the version details between different carbondata files.
+   * @return string with information of who has written this file
+   * in which carbondata project version
    * @throws IOException
    */
-  public static String getVersionDetails(String dataFilePath) throws IOException {
+  public static String getVersionDetails(String path, boolean validate) throws IOException {
+    if (path.endsWith(INDEX_FILE_EXT)) {
+      throw new RuntimeException("Can't get version details from carbonindex file.");
+    } else if (path.endsWith(CARBON_DATA_EXT)) {
+      return getVersionDetailsFromDataFile(path);
+    } else if (validate) {
+      CarbonFile[] carbonDataFiles = getCarbonFile(path, CARBON_DATA_EXT);
+      String versionDetails = getVersionDetailsFromDataFile(carbonDataFiles[0].getAbsolutePath());
+      for (int i = 1; i < carbonDataFiles.length; i++) {
+        String versionDetails2 =
+            getVersionDetailsFromDataFile(carbonDataFiles[i].getAbsolutePath());
+        if (!versionDetails.equals(versionDetails2)) {
+          throw new CarbonDataLoadingException(
+              "Version details is different between different files.");
+        }
+      }
+      return versionDetails;
+    } else {
+      String indexFilePath = getCarbonFile(path, CARBON_DATA_EXT)[0].getAbsolutePath();
+      return getVersionDetailsFromDataFile(indexFilePath);
+    }
+  }
+
+  /**
+   * This method return the version details in formatted string by reading from carbondata file
+   * default won't validate the version details between different carbondata files.
+   *
+   * @param path carbondata file path or folder path
+   * @return string with information of who has written this file
+   * in which carbondata project version
+   * @throws IOException
+   */
+  public static String getVersionDetails(String path) throws IOException {
+    return getVersionDetails(path, false);
+  }
+
+  private static String getVersionDetailsFromDataFile(String dataFilePath) throws IOException {
     long fileSize =
         FileFactory.getCarbonFile(dataFilePath, FileFactory.getFileType(dataFilePath)).getSize();
     FileReader fileReader = FileFactory.getFileHolder(FileFactory.getFileType(dataFilePath));
