@@ -176,15 +176,24 @@ void printResult(JNIEnv *env, CarbonReader reader) {
  * @param env jni env
  * @return whether it is success
  */
-bool readSchema(JNIEnv *env, char *Path, bool validateSchema) {
-    printf("\nread Schema from Index File:\n");
-    CarbonSchemaReader carbonSchemaReader(env);
-    jobject schema;
+bool readSchema(JNIEnv *env, char *Path, bool validateSchema, char **argv, int argc) {
     try {
+        printf("\nread Schema:\n");
+        Configuration conf(env);
+        if (argc > 3) {
+            conf.set("fs.s3a.access.key", argv[1]);
+            conf.set("fs.s3a.secret.key", argv[2]);
+            conf.set("fs.s3a.endpoint", argv[3]);
+        }
+        printf("%s\n", conf.get("fs.s3a.endpoint", "default"));
+
+        CarbonSchemaReader carbonSchemaReader(env);
+        jobject schema;
+
         if (validateSchema) {
-            schema = carbonSchemaReader.readSchema(Path, validateSchema);
+            schema = carbonSchemaReader.readSchema(Path, validateSchema, conf);
         } else {
-            schema = carbonSchemaReader.readSchema(Path);
+            schema = carbonSchemaReader.readSchema(Path, conf);
         }
         Schema carbonSchema(env, schema);
         int length = carbonSchema.getFieldsLength();
@@ -687,6 +696,8 @@ int main(int argc, char *argv[]) {
     if (argc > 3) {
         // TODO: need support read schema from S3 in the future
         testWriteData(env, S3WritePath, 4, argv);
+        readSchema(env, S3WritePath, true, argv,4);
+        readSchema(env, S3WritePath, false, argv, 4);
         readFromS3(env, S3ReadPath, argv);
 
         testReadNextRow(env, S3Path, 100000, argv, 4, false);
@@ -701,8 +712,8 @@ int main(int argc, char *argv[]) {
         testWriteData(env, "./data", 1, argv);
         readFromLocalWithoutProjection(env, smallFilePath);
         readFromLocalWithProjection(env, smallFilePath);
-        readSchema(env, path, false);
-        readSchema(env, path, true);
+        readSchema(env, path, false, argv, 1);
+        readSchema(env, path, true, argv, 1);
 
         int batch = 32000;
         int printNum = 32000;

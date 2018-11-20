@@ -633,7 +633,7 @@ Find example code at [CarbonReaderExample](https://github.com/apache/carbondata/
   * @return list of CarbonReader objects
   */
   public List<CarbonReader> split(int maxSplits);
-``
+```
 
 ```
   /**
@@ -722,26 +722,6 @@ Find example code at [CarbonReaderExample](https://github.com/apache/carbondata/
 
 ```
   /**
-   * Read carbondata file and return the schema
-   *
-   * @param dataFilePath complete path including carbondata file name
-   * @return Schema object
-   */
-  public static Schema readSchemaInDataFile(String dataFilePath);
-```
-
-```
-  /**
-   * Read carbonindex file and return the schema
-   *
-   * @param indexFilePath complete path including index file name
-   * @return schema object
-   * @throws IOException
-   */
-  public static Schema readSchemaInIndexFile(String indexFilePath);
-```
-```
-  /**
    * read schema from path,
    * path can be folder path,carbonindex file path, and carbondata file path
    * and will not check all files schema
@@ -752,6 +732,21 @@ Find example code at [CarbonReaderExample](https://github.com/apache/carbondata/
    */
   public static Schema readSchema(String path);
 ```
+
+```
+  /**
+   * read schema from path,
+   * path can be folder path, carbonindex file path, and carbondata file path
+   * and will not check all files schema
+   *
+   * @param path file/folder path
+   * @param conf hadoop configuration support, can set s3a AK,SK,end point and other conf with this
+   * @return schema
+   * @throws IOException
+   */
+  public static Schema readSchema(String path, Configuration conf);
+```
+
 ```
   /**
    * read schema from path,
@@ -764,6 +759,22 @@ Find example code at [CarbonReaderExample](https://github.com/apache/carbondata/
    * @throws IOException
    */
   public static Schema readSchema(String path, boolean validateSchema);
+```
+
+```
+  /**
+   * read schema from path,
+   * path can be folder path, carbonindex file path, and carbondata file path
+   * and user can decide whether check all files schema
+   *
+   * @param path           file/folder path
+   * @param validateSchema whether check all files schema
+   * @param conf           hadoop configuration support, can set s3a AK,SK,
+   *                       end point and other conf with this
+   * @return schema
+   * @throws IOException
+   */
+  public static Schema readSchema(String path, boolean validateSchema, Configuration conf);
 ```
 
 ```
